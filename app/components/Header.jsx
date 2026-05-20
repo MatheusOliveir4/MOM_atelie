@@ -1,10 +1,94 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import Parse from "../../lib/parse";
+
 import Link from "next/link";
 
 export function Header() {
-  const usuario = Parse.User.current();
+  const [usuario, setUsuario] =
+    useState(undefined);
+
+  const [quantidadeCarrinho, setQuantidadeCarrinho] =
+    useState(0);
+
+  useEffect(() => {
+    async function carregarDados() {
+      try {
+        const currentUser =
+          await Parse.User.currentAsync();
+
+        setUsuario(currentUser);
+
+        if (!currentUser) return;
+
+        /*
+          =========================
+          BUSCA CARRINHO
+          =========================
+        */
+
+        const Carrinho =
+          Parse.Object.extend("Carrinho");
+
+        const carrinhoQuery =
+          new Parse.Query(Carrinho);
+
+        carrinhoQuery.equalTo(
+          "usuario",
+          currentUser
+        );
+
+        const carrinho =
+          await carrinhoQuery.first();
+
+        if (!carrinho) return;
+
+        /*
+          =========================
+          BUSCA ITENS
+          =========================
+        */
+
+        const CarrinhoItem =
+          Parse.Object.extend(
+            "CarrinhoItem"
+          );
+
+        const itemQuery =
+          new Parse.Query(CarrinhoItem);
+
+        itemQuery.equalTo(
+          "carrinho",
+          carrinho
+        );
+
+        const itens =
+          await itemQuery.find();
+
+        /*
+          =========================
+          SOMA QUANTIDADES
+          =========================
+        */
+
+        const total =
+          itens.reduce((acc, item) => {
+            return (
+              acc +
+              (item.get("quantidade") ?? 0)
+            );
+          }, 0);
+
+        setQuantidadeCarrinho(total);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    carregarDados();
+  }, []);
 
   return (
     <header
@@ -22,6 +106,7 @@ export function Header() {
         bg-[#efede1]
       "
     >
+      {/* ESQUERDA */}
       <div
         className="
           w-full
@@ -46,7 +131,7 @@ export function Header() {
           <Link
             href="/sobre"
             className="
-                border
+              border
               border-[#213131]
               px-4
               py-2
@@ -68,6 +153,7 @@ export function Header() {
         </nav>
       </div>
 
+      {/* LOGO */}
       <div
         className="
           flex
@@ -85,6 +171,7 @@ export function Header() {
         </Link>
       </div>
 
+      {/* DIREITA */}
       <div
         className="
           w-full
@@ -112,7 +199,7 @@ export function Header() {
             uppercase
           "
         >
-          Carrinho (0)
+          Carrinho ({quantidadeCarrinho})
         </Link>
 
         <div
@@ -125,7 +212,11 @@ export function Header() {
           "
         >
           <Link
-            href={usuario ? "/perfil" : "/login"}
+            href={
+              usuario
+                ? "/perfil"
+                : "/login"
+            }
             className="
               border
               border-[#213131]
@@ -144,29 +235,31 @@ export function Header() {
               uppercase
             "
           >
-            {usuario ? "perfil" : "Entrar"}
+            {usuario
+              ? "Perfil"
+              : "Entrar"}
           </Link>
 
           {!usuario && (
             <Link
               href="/cadastro"
               className="
-      border
-      border-[#213131]
-      px-4
-      py-2
-      text-[#213131]
-      text-[0.7rem]
-      sm:text-[0.75rem]
-      tracking-[2px]
-      font-semibold
-      no-underline
-      transition-all
-      hover:bg-[#213131]
-      hover:text-[#efede1]
-      font-poppins
-      uppercase
-    "
+                border
+                border-[#213131]
+                px-4
+                py-2
+                text-[#213131]
+                text-[0.7rem]
+                sm:text-[0.75rem]
+                tracking-[2px]
+                font-semibold
+                no-underline
+                transition-all
+                hover:bg-[#213131]
+                hover:text-[#efede1]
+                font-poppins
+                uppercase
+              "
             >
               Cadastre-se
             </Link>

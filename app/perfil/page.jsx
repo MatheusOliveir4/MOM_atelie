@@ -214,6 +214,29 @@ export default function MinhaConta() {
               >
                 Continuar Comprando
               </Link>
+              {
+                usuario.get("adm") === true && (
+                  <Link
+                    href="/CRUD_ADM"
+                    className="
+                      inline-block
+                      border
+                      border-[#213131]
+                      px-6
+                      py-4
+                      uppercase
+                      tracking-[3px]
+                      text-[0.7rem]
+                      hover:bg-[#213131]
+                      hover:text-[#efede1]
+                      transition-all
+                      mt-4
+                    "
+                  >
+                    Painel Administrativo
+                  </Link>
+                )
+              }
             </div>
 
             <div
