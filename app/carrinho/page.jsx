@@ -278,7 +278,7 @@ export default function CarrinhoPage() {
     }
 
     let mensagem =
-      "Olá! Gostaria de finalizar meu pedido na MOM Ateliê 💛\n\n";
+      "Olá! Gostaria de finalizar meu pedido na MOM Ateliê \n\n";
 
     produtos.forEach((produto) => {
       const precoUnitario = Number(
@@ -307,7 +307,7 @@ export default function CarrinhoPage() {
       `Total do pedido: ${subtotalFormatado}\n\n`;
 
     mensagem +=
-      "Aguardo informações sobre pagamento e entrega ✨";
+      "Aguardo informações sobre pagamento e entrega ";
 
     const telefoneLoja =
       "5581992282553";

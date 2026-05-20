@@ -48,13 +48,14 @@ export default function Home() {
             gap-[25px]
           "
         >
-          <CategoryCard title="Necessaires" image="/images/necessaire.jpg" />
+          <CategoryCard title="Toalha" image="/images/Picture1.1.png" />
 
-          <CategoryCard title="Bolsas" image="/images/bolsa.jpg" />
+          <CategoryCard title="Bonecos" image="/images/Picture1.2.png" />
 
-          <CategoryCard title="Mochilas" image="/images/mochila.jpg" />
+          <CategoryCard title="Bonecos" image="/images/Picture1.3.png" />
 
-          <CategoryCard title="Acessórios" image="/images/acessorio.jpg" />
+          <CategoryCard title="Toalha" image="/images/Picture1.4.png" />
+
         </div>
       </section>
 
