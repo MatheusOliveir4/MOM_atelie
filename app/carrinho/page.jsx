@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 
 import Parse from "../../lib/parse";
@@ -108,7 +109,9 @@ export default function CarrinhoPage() {
 
         setProdutos(itensFormatados);
       } catch (error) {
-        console.error(error);
+        toast.error(
+          "Erro ao carregar carrinho: "
+        );
       } finally {
         setLoading(false);
       }
@@ -153,7 +156,9 @@ export default function CarrinhoPage() {
         quantidadeAtual + 1
       );
     } catch (error) {
-      console.error(error);
+      toast.error(
+        "Erro ao aumentar quantidade: "
+      );
     }
   }
 
@@ -205,7 +210,9 @@ export default function CarrinhoPage() {
         quantidadeAtual - 1
       );
     } catch (error) {
-      console.error(error);
+      toast.error(
+        "Erro ao diminuir quantidade: "
+      );
     }
   }
 
@@ -237,8 +244,14 @@ export default function CarrinhoPage() {
           (p) => p.id !== itemId
         )
       );
+
+      toast.success(
+        "Produto removido do carrinho!"
+      );
     } catch (error) {
-      console.error(error);
+      toast.error(
+        "Erro ao remover produto do carrinho: "
+      );
     }
   }
 
@@ -273,7 +286,9 @@ export default function CarrinhoPage() {
 
   function finalizarPedido() {
     if (produtos.length === 0) {
-      alert("Seu carrinho está vazio.");
+      toast.error(
+        "Seu carrinho está vazio."
+      );
       return;
     }
 
@@ -502,6 +517,7 @@ export default function CarrinhoPage() {
                                 px-4
                                 py-2
                                 text-[#213131]
+                                cursor-pointer
                               "
                             >
                               -
@@ -529,6 +545,7 @@ export default function CarrinhoPage() {
                                 px-4
                                 py-2
                                 text-[#213131]
+                                cursor-pointer
                               "
                             >
                               +
@@ -548,6 +565,7 @@ export default function CarrinhoPage() {
                               text-[#a66]
                               hover:opacity-70
                               transition-all
+                              cursor-pointer
                             "
                           >
                             Remover
@@ -662,6 +680,7 @@ export default function CarrinhoPage() {
                   hover:text-[#213131]
                   transition-all
                   mb-4
+                  cursor-pointer
                 "
               >
                 Finalizar pedido

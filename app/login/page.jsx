@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FormInput } from "../components/FormInput";
 import { z } from "zod";
+import { toast } from "react-toastify";
 
 const loginSchema = z.object({
   email: z.email("E-mail inválido"),
@@ -29,11 +30,9 @@ export default function Login() {
     });
 
     if (!resultado.success) {
-      const erros = resultado.error.issues
-        .map((erro) => erro.message)
-        .join("\n");
-
-      alert(erros);
+      resultado.error.issues.forEach((erro) => {
+        toast.error(erro.message);
+      });
       return;
     }
 
@@ -41,9 +40,11 @@ export default function Login() {
 
     try {
       await Parse.User.logIn(email, senha);
+      toast.success("Login realizado com sucesso!");
       router.push("/");
+
     } catch (error) {
-      alert("Erro ao entrar: " + error.message);
+      toast.error(error.message);
     } finally {
       setCarregando(false);
     }
@@ -93,7 +94,6 @@ export default function Login() {
         <form onSubmit={handleLogin} className="w-full text-left">
           <FormInput
             label="E-MAIL"
-            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Digite seu e-mail"

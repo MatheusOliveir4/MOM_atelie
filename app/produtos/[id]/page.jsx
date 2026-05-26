@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 import Parse from "@/lib/parse";
 
@@ -188,12 +189,18 @@ export default function ProdutoPage() {
         await item.save();
       }
 
-      alert("Produto adicionado ao carrinho!");
+      toast.success(
+        "Produto adicionado ao carrinho!"
+      );
+
+      router.push("/produtos");
+      
     } catch (error) {
       console.error(error);
 
-      alert(
-        "Erro ao adicionar produto ao carrinho."
+      toast.error(
+        "Erro ao adicionar ao carrinho: " +
+          error.message
       );
     } finally {
       setLoadingCarrinho(false);
@@ -301,6 +308,7 @@ export default function ProdutoPage() {
                 hover:text-[#efede1]
                 transition
                 disabled:opacity-50
+                cursor-pointer
               "
             >
               {loadingCarrinho
