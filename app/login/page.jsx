@@ -120,6 +120,13 @@ export default function Login() {
         >
           Ainda não tem acesso? <strong>Cadastre-se</strong>
         </Link>
+
+        <Link
+          href="/recuperar-senha"
+          className="mt-[30px] block text-[#213131] text-[0.75rem] no-underline font-['Poppins']"
+        >
+          Esqueceu a senha? <strong>Recupere aqui</strong>
+        </Link>
       </div>
     </main>
   );
