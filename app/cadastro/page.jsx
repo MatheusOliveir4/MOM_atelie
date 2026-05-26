@@ -5,26 +5,73 @@ import Parse from "../../lib/parse";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FormInput } from "../components/FormInput";
+import { z } from "zod";
+
+const cadastroSchema = z.object({
+  nome: z
+    .string()
+    .min(3, "O nome deve ter pelo menos 3 caracteres"),
+
+  email: z
+    .email("E-mail inválido"),
+
+  senha: z
+    .string()
+    .min(6, "A senha deve ter pelo menos 6 caracteres")
+    .regex(/[A-Z]/, "A senha deve conter uma letra maiúscula")
+    .regex(/[0-9]/, "A senha deve conter um número"),
+
+  confirmarSenha: z
+    .string()
+    .min(1, "Confirme sua senha"),
+})
+.refine(
+    (dados) => dados.senha === dados.confirmarSenha,
+    {
+      message: "As senhas não coincidem",
+      path: ["confirmarSenha"],
+    }
+  );
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
   const [carregando, setCarregando] = useState(false);
   const router = useRouter();
 
   const handleCadastro = async (e) => {
     e.preventDefault();
+
+    const resultado = cadastroSchema.safeParse({
+      nome,
+      email,
+      senha,
+      confirmarSenha,
+    });
+
+    if (!resultado.success) {
+      const erros = resultado.error.issues
+      .map((erro) => erro.message)
+      .join("\n");
+
+      alert(erros);
+      return;
+    }
+
     setCarregando(true);
 
-    const user = new Parse.User();
-    user.set("username", email);
-    user.set("email", email);
-    user.set("password", senha);
-    user.set("nomeCompleto", nome);
-
     try {
+      const user = new Parse.User();
+
+      user.set("username", email);
+      user.set("email", email);
+      user.set("password", senha);
+      user.set("nomeCompleto", nome);
+
       await user.signUp();
+
       alert("Conta criada com sucesso!");
       router.push("/");
     } catch (error) {
@@ -103,8 +150,8 @@ export default function Cadastro() {
             label="CONFIRMAR SENHA"
             type="password"
             required
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            value={confirmarSenha}
+            onChange={(e) => setConfirmarSenha(e.target.value)}
             placeholder={"Digite novamente a senha"}
           />
 

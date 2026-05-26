@@ -5,6 +5,14 @@ import Parse from "../../lib/parse";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FormInput } from "../components/FormInput";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.email("E-mail inválido"),
+  senha: z
+    .string()
+    .min(1, "A senha é obrigatória"),
+});
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +22,23 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    const resultado = loginSchema.safeParse({
+      email,
+      senha,
+    });
+
+    if (!resultado.success) {
+      const erros = resultado.error.issues
+        .map((erro) => erro.message)
+        .join("\n");
+
+      alert(erros);
+      return;
+    }
+
     setCarregando(true);
+
     try {
       await Parse.User.logIn(email, senha);
       router.push("/");
