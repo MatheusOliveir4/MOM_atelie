@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FormInput } from "../components/FormInput";
 import { z } from "zod";
+import { toast } from "react-toastify";
 
 const cadastroSchema = z.object({
   nome: z
@@ -52,11 +53,10 @@ export default function Cadastro() {
     });
 
     if (!resultado.success) {
-      const erros = resultado.error.issues
-      .map((erro) => erro.message)
-      .join("\n");
+      resultado.error.issues.forEach((erro) => {
+        toast.error(erro.message);
+      });
 
-      alert(erros);
       return;
     }
 
@@ -72,10 +72,10 @@ export default function Cadastro() {
 
       await user.signUp();
 
-      alert("Conta criada com sucesso!");
+      toast.success("Conta criada com sucesso!");
       router.push("/");
     } catch (error) {
-      alert("Erro ao cadastrar: " + error.message);
+      toast.error("Erro ao criar conta: " + error.message);
     } finally {
       setCarregando(false);
     }
@@ -130,7 +130,6 @@ export default function Cadastro() {
 
           <FormInput
             label="E-MAIL"
-            type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
