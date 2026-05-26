@@ -1,4 +1,6 @@
 import './globals.css'; 
+import { ToastContainer, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata = {
   title: 'MOM Ateliê',
@@ -21,6 +23,18 @@ export default function RootLayout({ children }) {
       </head>
       <body style={{ margin: 0, padding: 0, boxSizing: 'border-box' }}>
         {children}
+
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="colored"
+          transition={Slide}
+        />
       </body>
     </html>
   );
